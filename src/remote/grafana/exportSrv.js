@@ -400,6 +400,12 @@ ExportSrv.prototype.datasources = function(grafanaURL, options) {
       }
       // Use sync-request to avoid table lockdown
       url = sanitizeUrl(url, options.auth);
+      if (options.auth && options.auth.bearer) {
+        if (!options.headers) {
+          options.headers = {};
+        }
+        options.headers.Authorization = `Bearer ${options.auth.bearer}`;
+      }
       const response = request.reqSync(method, url, { json: body, headers: options.headers });
       if (response.statusCode !== 200) {
         logger.showOutput(response.getBody('utf8'));
